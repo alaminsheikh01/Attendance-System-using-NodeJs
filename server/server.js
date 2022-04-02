@@ -1,4 +1,5 @@
 const express = require("express");
+const connectDB = require("./db");
 
 const app = express();
 
@@ -10,6 +11,11 @@ app.get("/", (req, res) => {
   res.json(obj);
 });
 
-app.listen(3000, () => {
-  console.log("I am listening on port 3000");
-});
+connectDB("mongodb://localhost:27017/attendance-db")
+  .then(() => {
+    console.log("database connected");
+    app.listen(3000, () => {
+      console.log("I am listening on port 3000");
+    });
+  })
+  .catch((e) => console.log(e));
