@@ -41,6 +41,11 @@ app.get("/", (_, res) => {
   res.json(obj);
 });
 
+app.use((err, req, res, next) => {
+  console.log(err);
+  res.status(500).json({ messae: "Server Error Occured" });
+});
+
 connectDB("mongodb://localhost:27017/attendance-db")
   .then(() => {
     console.log("database connected");

@@ -14,13 +14,26 @@ const userSchema = new Schema({
       validator: function (v) {
         return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v);
       },
+      message: (prop) => `invalid email: ${prop.value}`,
     },
   },
   password: {
     type: String,
+    minlength: [6, "password is too short"],
+    maxlength: [30, "password is too long"],
+    required: true,
   },
-  roles: [String],
-  accountStatus: String,
+  roles: {
+    type: [String],
+    required: true,
+    default: ["STUDENT"],
+  },
+  accountStatus: {
+    type: String,
+    enum: ["PENDING", "ACTIVE", "REGECTED"],
+    default: "PENDING",
+    required: true,
+  },
 });
 
 const User = model("User", userSchema);
