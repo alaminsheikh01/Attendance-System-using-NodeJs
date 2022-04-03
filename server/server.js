@@ -1,14 +1,30 @@
 const express = require("express");
 const connectDB = require("./db");
 
+//import model
+const User = require("./models/User");
+
 const app = express();
+
+// middleware
 app.use(express.json());
 
-app.post("/register", (req, res) => {
+// route
+app.post("/register", async (req, res) => {
   const { name, email, password } = req.body;
+
   if (!name || !email || !password) {
     return res.status(400).json({ message: "invalid data" });
   }
+
+  let user = await User.findOne({ email });
+  if (user) {
+    return res.status(400).json({ message: "user already exist" });
+  }
+
+  user = new User({ name, email, password });
+  await user.save();
+  return res.status(201).json({ message: "User created success", user });
 });
 
 app.get("/", (_, res) => {
