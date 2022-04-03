@@ -1,5 +1,6 @@
 const express = require("express");
 const connectDB = require("./db");
+const bcrypt = require("bcryptjs");
 
 //import model
 const User = require("./models/User");
@@ -23,6 +24,11 @@ app.post("/register", async (req, res) => {
   }
 
   user = new User({ name, email, password });
+
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(password, salt);
+  user.password = hash;
+
   await user.save();
   return res.status(201).json({ message: "User created success", user });
 });
