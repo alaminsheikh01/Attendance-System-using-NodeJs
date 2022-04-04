@@ -53,9 +53,9 @@ app.post("/login", async (req, res, next) => {
       return res.status(400).json({ messaeg: "Invalid Credential" });
     }
 
-    delete user.password;
+    delete user._doc.password;
 
-    return res.status(200).json({ messae: "Login Successful" });
+    return res.status(200).json({ messae: "Login Successful", user });
   } catch (e) {
     next(e);
   }
