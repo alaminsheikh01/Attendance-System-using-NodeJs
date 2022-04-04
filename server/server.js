@@ -37,6 +37,30 @@ app.post("/register", async (req, res, next) => {
   }
 });
 
+app.post("/login", async (req, res, next) => {
+  const { email, password } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({ messae: "Invalid Credential" });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+
+    if (!isMatch) {
+      return res.status(400).json({ messaeg: "Invalid Credential" });
+    }
+
+    delete user.password;
+
+    return res.status(200).json({ messae: "Login Successful" });
+  } catch (e) {
+    next(e);
+  }
+});
+
 app.get("/", (_, res) => {
   const obj = {
     name: "Alamin",
