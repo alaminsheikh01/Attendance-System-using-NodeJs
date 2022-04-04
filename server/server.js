@@ -11,26 +11,30 @@ const app = express();
 app.use(express.json());
 
 // route
-app.post("/register", async (req, res) => {
+app.post("/register", async (req, res, next) => {
   const { name, email, password } = req.body;
 
   if (!name || !email || !password) {
     return res.status(400).json({ message: "invalid data" });
   }
 
-  let user = await User.findOne({ email });
-  if (user) {
-    return res.status(400).json({ message: "user already exist" });
+  try {
+    let user = await User.findOne({ email });
+    if (user) {
+      return res.status(400).json({ message: "user already exist" });
+    }
+
+    user = new User({ name, email, password });
+
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    user.password = hash;
+
+    await user.save();
+    return res.status(201).json({ message: "User created success", user });
+  } catch (e) {
+    next(e);
   }
-
-  user = new User({ name, email, password });
-
-  const salt = await bcrypt.genSalt(10);
-  const hash = await bcrypt.hash(password, salt);
-  user.password = hash;
-
-  await user.save();
-  return res.status(201).json({ message: "User created success", user });
 });
 
 app.get("/", (_, res) => {
