@@ -64,6 +64,25 @@ app.post("/login", async (req, res, next) => {
   }
 });
 
+app.get("/private", (req, res) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const user = jwt.verify(token, "secret-key");
+    console.log(user);
+  } catch (e) {
+    return res.status(400).json({ message: "Invalid token" });
+  }
+
+  return res.status(200).json({ message: "I am a private route." });
+});
+app.get("/public", (req, res) => {
+  return res.status(200).json({ message: "I am a private route." });
+});
+
 app.get("/", (_, res) => {
   const obj = {
     name: "Alamin",
