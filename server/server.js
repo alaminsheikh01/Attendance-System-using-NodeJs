@@ -1,6 +1,7 @@
 const express = require("express");
 const connectDB = require("./db");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 //import model
 const User = require("./models/User");
@@ -55,7 +56,9 @@ app.post("/login", async (req, res, next) => {
 
     delete user._doc.password;
 
-    return res.status(200).json({ messae: "Login Successful", user });
+    const token = jwt.sign(user._doc, "secret-key", { expiresIn: "2h" });
+
+    return res.status(200).json({ messae: "Login Successful", token });
   } catch (e) {
     next(e);
   }
