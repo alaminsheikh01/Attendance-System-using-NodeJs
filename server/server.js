@@ -3,6 +3,15 @@ const connectDB = require("./db");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+//import custom controller
+const {
+  loginController,
+  registerController,
+} = require("./controller/authController");
+
+// import custom middleware
+const authenticate = require("./middleware/authenticate");
+
 //import model
 const User = require("./models/User");
 
@@ -12,88 +21,17 @@ const app = express();
 app.use(express.json());
 
 // route
-app.post("/register", async (req, res, next) => {
-  const { name, email, password } = req.body;
+app.post("/register", registerController);
 
-  if (!name || !email || !password) {
-    return res.status(400).json({ message: "invalid data" });
-  }
+app.post("/login", loginController);
 
-  try {
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: "user already exist" });
-    }
-
-    user = new User({ name, email, password });
-
-    const salt = await bcrypt.genSalt(10);
-    const hash = await bcrypt.hash(password, salt);
-    user.password = hash;
-
-    await user.save();
-    return res.status(201).json({ message: "User created success", user });
-  } catch (e) {
-    next(e);
-  }
-});
-
-app.post("/login", async (req, res, next) => {
-  const { email, password } = req.body;
-
-  try {
-    const user = await User.findOne({ email });
-
-    if (!user) {
-      return res.status(400).json({ messae: "Invalid Credential" });
-    }
-
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(400).json({ messaeg: "Invalid Credential" });
-    }
-
-    delete user._doc.password;
-
-    const token = jwt.sign(user._doc, "secret-key", { expiresIn: "2h" });
-
-    return res.status(200).json({ messae: "Login Successful", token });
-  } catch (e) {
-    next(e);
-  }
-});
-
-app.get("/private", async (req, res) => {
-  const token = req.headers.authorization;
-  if (!token) {
-    return res.status(401).json({ message: "Unauthorized" });
-  }
-
-  try {
-    // token = token.split(" ")[1]; // if have bearer token in the token. then just simply remove it.
-    const decoded = jwt.verify(token, "secret-key");
-    const user = await User.findById(decoded._id);
-
-    if (!user) {
-      return res.status(401).json({ messae: "Unauthorized" });
-    }
-    return res.status(200).json({ message: "I am a private route." });
-  } catch (e) {
-    return res.status(400).json({ message: "Invalid token" });
-  }
+app.get("/private", authenticate, async (req, res) => {
+  console.log("i am from user", req.user);
+  return res.status(200).json({ message: "I am a private route." });
 });
 app.get("/public", (req, res) => {
   return res.status(200).json({ message: "I am a private route." });
 });
-
-// app.get("/", (_, res) => {
-//   const obj = {
-//     name: "Alamin",
-//     email: "alamin@gmail.com",
-//   };
-//   res.json(obj);
-// });
 
 app.use((err, req, res, next) => {
   console.log(err);
