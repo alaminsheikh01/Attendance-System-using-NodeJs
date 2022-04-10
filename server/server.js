@@ -1,29 +1,19 @@
 const express = require("express");
 const connectDB = require("./db");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
 
-//import custom controller
-const {
-  loginController,
-  registerController,
-} = require("./controller/authController");
+// routes
+const routes = require("./routes");
 
 // import custom middleware
 const authenticate = require("./middleware/authenticate");
-
-//import model
-const User = require("./models/User");
 
 const app = express();
 
 // middleware
 app.use(express.json());
+app.use(routes);
 
 // route
-app.post("/register", registerController);
-
-app.post("/login", loginController);
 
 app.get("/private", authenticate, async (req, res) => {
   console.log("i am from user", req.user);
