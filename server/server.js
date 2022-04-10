@@ -64,32 +64,36 @@ app.post("/login", async (req, res, next) => {
   }
 });
 
-app.get("/private", (req, res) => {
+app.get("/private", async (req, res) => {
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ message: "Unauthorized" });
   }
 
   try {
-    const user = jwt.verify(token, "secret-key");
-    console.log(user);
+    // token = token.split(" ")[1]; // if have bearer token in the token. then just simply remove it.
+    const decoded = jwt.verify(token, "secret-key");
+    const user = await User.findById(decoded._id);
+
+    if (!user) {
+      return res.status(401).json({ messae: "Unauthorized" });
+    }
+    return res.status(200).json({ message: "I am a private route." });
   } catch (e) {
     return res.status(400).json({ message: "Invalid token" });
   }
-
-  return res.status(200).json({ message: "I am a private route." });
 });
 app.get("/public", (req, res) => {
   return res.status(200).json({ message: "I am a private route." });
 });
 
-app.get("/", (_, res) => {
-  const obj = {
-    name: "Alamin",
-    email: "alamin@gmail.com",
-  };
-  res.json(obj);
-});
+// app.get("/", (_, res) => {
+//   const obj = {
+//     name: "Alamin",
+//     email: "alamin@gmail.com",
+//   };
+//   res.json(obj);
+// });
 
 app.use((err, req, res, next) => {
   console.log(err);
