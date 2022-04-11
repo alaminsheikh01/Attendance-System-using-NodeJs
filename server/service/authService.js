@@ -1,36 +1,27 @@
-const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { findUserByProperty, createNewUser } = require("./userService");
+const error = require("../utils/error");
 
 const registerService = async ({ name, email, password }) => {
   let user = await findUserByProperty("email", email);
   if (user) {
-    // return res.status(400).json({ message: "user already exist" });
-    const error = new Error("User already exist");
-    error.status = 400;
-    throw error;
+    throw error("User already exist", 400);
   }
-
-  user = new User({ name, email, password });
 
   const salt = await bcrypt.genSalt(10);
   const hash = await bcrypt.hash(password, salt);
-  createNewUser({ name, email, password: hash });
+  return createNewUser({ name, email, password: hash });
 };
 
 const loginService = async ({ email, password }) => {
   const user = await findUserByProperty("email", email);
   if (!user) {
-    const error = new Error("Invalid Credential");
-    error.status = 400;
-    throw error;
+    throw error("Invalid Credential", 400);
   }
   const isMatch = await bcrypt.compare(password, user.password);
   if (!isMatch) {
-    const error = new Error("Invalid Credential");
-    error.status = 400;
-    throw error;
+    throw error("Invalid Credential", 400);
   }
   const payload = {
     _id: user._id,
