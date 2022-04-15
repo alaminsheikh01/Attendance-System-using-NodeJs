@@ -1,7 +1,6 @@
 const User = require("../models/User");
-const userService = require("../service/authService");
 
-const findUser = () => {
+const findUsers = () => {
   return User.find();
 };
 
@@ -20,5 +19,5 @@ const createNewUser = ({ name, email, password }) => {
 module.exports = {
   findUserByProperty,
   createNewUser,
-  findUser,
+  findUsers,
 };

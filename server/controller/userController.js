@@ -1,6 +1,14 @@
 const User = require("../models/User");
+const userService = require("../service/userService");
 
-const getUser = (req, res, next) => {};
+const getUsers = async (req, res, next) => {
+  try {
+    const users = await userService.findUsers();
+    return res.status(200).json(users);
+  } catch (e) {
+    next(e);
+  }
+};
 
 const getUserById = (req, res, next) => {};
 
@@ -13,7 +21,7 @@ const patchUserById = (req, res, next) => {};
 const deleteUserById = (req, res, next) => {};
 
 module.exports = {
-  getUser,
+  getUsers,
   getUserById,
   postUser,
   putUserById,

@@ -1,4 +1,5 @@
 const router = require("express").Router();
+const { getUsers } = require("../controller/userController");
 
 router.get("/:userId", () => {});
 
@@ -10,9 +11,16 @@ router.get("/:userId", () => {});
 router.put("/:userId", () => {});
 
 /**
+ * Update user by Id
+ * @method PATCH
+ */
+
+router.patch("/:userId", () => {});
+
+/**
  * delete user
  */
-router.patch("/:userId", () => {});
+router.delete("/:userId", () => {});
 
 /**
  * get all users, include
@@ -25,7 +33,7 @@ router.patch("/:userId", () => {});
  * @visibility Private
  */
 
-router.get("/", () => {});
+router.get("/", getUsers);
 
 // create a new user
 
