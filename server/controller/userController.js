@@ -10,7 +10,9 @@ const getUsers = async (req, res, next) => {
   }
 };
 
-const getUserById = (req, res, next) => {};
+const getUserById = (req, res, next) => {
+  console.log(req.params);
+};
 
 const postUser = (req, res, next) => {};
 

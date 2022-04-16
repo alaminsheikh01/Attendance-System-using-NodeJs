@@ -1,7 +1,7 @@
 const router = require("express").Router();
-const { getUsers } = require("../controller/userController");
+const Ucontroller = require("../controller/userController");
 
-router.get("/:userId", () => {});
+router.get("/:userId", Ucontroller.getUserById);
 
 /**
  * Update user by Id
@@ -22,18 +22,7 @@ router.patch("/:userId", () => {});
  */
 router.delete("/:userId", () => {});
 
-/**
- * get all users, include
- * filter
- * sort
- * pagination
- * select properties
- * @route /api/v1/users?sort=['by','name']
- * @method GET
- * @visibility Private
- */
-
-router.get("/", getUsers);
+router.get("/", Ucontroller.getUsers);
 
 // create a new user
 
