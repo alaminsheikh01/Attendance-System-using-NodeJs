@@ -3,23 +3,10 @@ const Ucontroller = require("../controller/userController");
 
 router.get("/:userId", Ucontroller.getUserById);
 
-/**
- * Update user by Id
- * @method PUT
- */
-
 router.put("/:userId", () => {});
-
-/**
- * Update user by Id
- * @method PATCH
- */
 
 router.patch("/:userId", () => {});
 
-/**
- * delete user
- */
 router.delete("/:userId", () => {});
 
 router.get("/", Ucontroller.getUsers);

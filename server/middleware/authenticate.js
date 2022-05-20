@@ -3,11 +3,12 @@ const User = require("../models/User");
 
 async function authenticate(req, res, next) {
   try {
-    const token = req.headers.authorization;
+    let token = req.headers.authorization;
+
     if (!token) {
       return res.status(401).json({ message: "Unauthorized" });
     }
-    // token = token.split(" ")[1]; // if have bearer token in the token. then just simply remove it.
+    token = token.split(" ")[1]; // if have bearer token in the token. then just simply remove it.
     const decoded = jwt.verify(token, "secret-key");
     const user = await User.findById(decoded._id);
 
