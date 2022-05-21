@@ -13,7 +13,7 @@ router.get("/", Ucontroller.getUsers);
 
 // create a new user
 
-router.post("/", () => {});
+router.post("/", Ucontroller.postUser);
 
 /**
  * Get user by id or email
