@@ -28,6 +28,7 @@ const getUserById = async (req, res, next) => {
     next(e);
   }
 };
+// create user
 
 const postUser = async (req, res, next) => {
   const { name, email, password, roles, accountStatus } = req.body;
@@ -50,7 +51,21 @@ const putUserById = (req, res, next) => {};
 
 const patchUserById = (req, res, next) => {};
 
-const deleteUserById = (req, res, next) => {};
+const deleteUserById = async (req, res, next) => {
+  const userId = req.params.userId;
+
+  try {
+    const user = await userService.findUserByProperty("_id", userId);
+
+    if (!user) {
+      throw error("User not found", 404);
+    }
+    await user.remove();
+    return res.status(203).send();
+  } catch (e) {
+    next(e);
+  }
+};
 
 module.exports = {
   getUsers,

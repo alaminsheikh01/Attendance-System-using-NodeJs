@@ -7,7 +7,7 @@ router.put("/:userId", () => {});
 
 router.patch("/:userId", () => {});
 
-router.delete("/:userId", () => {});
+router.delete("/:userId", Ucontroller.deleteUserById);
 
 router.get("/", Ucontroller.getUsers);
 
