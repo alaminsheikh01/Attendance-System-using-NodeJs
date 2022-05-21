@@ -3,9 +3,9 @@ const Ucontroller = require("../controller/userController");
 
 router.get("/:userId", Ucontroller.getUserById);
 
-router.put("/:userId", () => {});
+router.put("/:userId", Ucontroller.putUserById);
 
-router.patch("/:userId", () => {});
+router.patch("/:userId", Ucontroller.patchUserById);
 
 router.delete("/:userId", Ucontroller.deleteUserById);
 
