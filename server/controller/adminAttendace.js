@@ -1,4 +1,4 @@
-const {} = require("date-fns");
+const { addMinutes, isAfter } = require("date-fns");
 const AdminAttendance = require("../models/AdminAttendance");
 const error = require("../utils/error");
 
@@ -24,6 +24,14 @@ const getStatus = async (req, res, next) => {
     if (!running) {
       throw error("Not Running", 400);
     }
+
+    const started = addMinutes(new Date(running.createdAt), running.timeLimit);
+    // console.log(isAfter(new Date(), started));
+    if (isAfter(new Date(), started)) {
+      running.status = "COMPLETED";
+      await running.save();
+    }
+
     return res.status(200).json(running);
   } catch (e) {
     next(e);
