@@ -38,7 +38,21 @@ const getStatus = async (req, res, next) => {
   }
 };
 
-const getDisable = (req, res, next) => {};
+const getDisable = async (req, res, next) => {
+  try {
+    const running = await AdminAttendance.findOne({ statsu: "RUNNING" });
+    if (!running) {
+      throw error("Not Running", 400);
+    }
+
+    running.status = "COMPLETED";
+    await running.save();
+
+    return res.status(200).json(running);
+  } catch (e) {
+    next(e);
+  }
+};
 
 module.exports = {
   getEnable,

@@ -3,6 +3,7 @@ const authRoutes = require("./authRoutes");
 const userRoutes = require("./userRoutes");
 const authentic = require("../middleware/authenticate");
 const adminAttendanceRoute = require("./admin-attendance-route");
+const StudentAttendanceRoutes = require("./student-attendance-route");
 
 router.use("/api/v1/auth", authRoutes);
 router.use("/api/v1/users", authentic, userRoutes);
