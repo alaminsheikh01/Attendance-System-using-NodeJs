@@ -40,7 +40,7 @@ const getStatus = async (req, res, next) => {
 
 const getDisable = async (req, res, next) => {
   try {
-    const running = await AdminAttendance.findOne({ statsu: "RUNNING" });
+    const running = await AdminAttendance.findOne({ status: "RUNNING" });
     if (!running) {
       throw error("Not Running", 400);
     }

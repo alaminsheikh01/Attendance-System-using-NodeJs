@@ -10,7 +10,8 @@ const getAttendance = async (req, res, next) => {
     /**
      * step 1 - Find admin attendance by id
      * step 2 - Check if it is running or not
-     * step 3 - Register entry
+     * step 3 - Check already register or not
+     * step 4 - Register entry
      */
 
     const adminAttendance = await AdminAttendance.findById(id);
@@ -22,7 +23,15 @@ const getAttendance = async (req, res, next) => {
       throw error("Attendance Already Completed");
     }
 
-    const attendance = new StudentAttendace({
+    let attendance = await StudentAttendace.findOne({
+      adminAttendance: id,
+      user: req.user._id,
+    });
+    if (attendance) {
+      throw error("Already Register", 400);
+    }
+
+    attendance = new StudentAttendace({
       user: req.user._id,
       adminAttendance: id,
     });
